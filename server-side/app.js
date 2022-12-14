@@ -12,6 +12,8 @@ app.use(express.json());
 
 const uri = process.env.ATLAS_URI;
 
+mongoose.set('strictQuery', true);
+
 mongoose
   .connect(uri, {
     useNewUrlParser: true,
@@ -19,11 +21,13 @@ mongoose
   })
   .then(() => {
     console.log("Connected to MongoDB");
-  })
+  });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const exercisesRouter = require('./routes/exercises');
+const usersRouter = require('./routes/users');
+
+app.use('/exercises', exercisesRouter);
+app.use('/users', usersRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on Port ${PORT}`)
